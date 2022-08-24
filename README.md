@@ -1,7 +1,7 @@
 # PKCS11js
 
 [![license](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/PeculiarVentures/graphene/master/LICENSE)
-[![Build Status](https://travis-ci.org/PeculiarVentures/pkcs11js.svg?branch=master)](https://travis-ci.org/PeculiarVentures/pkcs11js)
+![test](https://github.com/PeculiarVentures/pkcs11js/workflows/test/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/PeculiarVentures/pkcs11js/badge.svg?branch=master)](https://coveralls.io/github/PeculiarVentures/pkcs11js?branch=master)
 [![npm version](https://badge.fury.io/js/pkcs11js.svg)](https://badge.fury.io/js/pkcs11js)
 
@@ -12,7 +12,7 @@ We make a package called [Graphene](https://github.com/PeculiarVentures/graphene
 
 PKCS#11 (also known as CryptoKI or PKCS11) is the standard interface for interacting with hardware crypto devices such as Smart Cards and Hardware Security Modules (HSMs).
 
-This was developed to the PKCS#11 2.30 specification, the 2.40 headers were not availible at the time we created this, it should be easy enough to extend it for the new version at a later date.
+This was developed to the PKCS#11 2.30 specification, the 2.40 headers were not available at the time we created this, it should be easy enough to extend it for the new version at a later date.
 
 It has been tested with :
 - [SoftHSM2](https://www.opendnssec.org/softhsm/)
@@ -22,18 +22,21 @@ It has been tested with :
 
 **NOTE:** For testing purposes it may be easier to work with SoftHSM2 which is a software implementation of PKCS#11 based on OpenSSL or Botan.
 
-
 ## Installation
 
 ```
 $ npm install pkcs11js
 ```
 
+## Documentation
+
+[https://peculiarventures.github.io/pkcs11js/](https://peculiarventures.github.io/pkcs11js/)
+
 ### Install SoftHSM2
 
 - For OSX see the [instructions here](https://github.com/opendnssec/SoftHSMv2/blob/develop/OSX-NOTES.md)
 - For linux [instructions here](https://github.com/opendnssec/SoftHSMv2/blob/develop/README.md)
-
+- For Windows [instructions here](https://github.com/disig/SoftHSM2-for-Windows#softhsm2-installer-for-ms-windows)
 
 ## Examples
 
@@ -71,9 +74,9 @@ try {
     pkcs11.C_Login(session, 1, "password");
 
     /**
-    * Your app code here
-    */
-
+     * Your app code here
+     */
+    
     pkcs11.C_Logout(session);
     pkcs11.C_CloseSession(session);
 }
@@ -155,8 +158,8 @@ var nObject = pkcs11.C_CreateObject(session, [
     { type: pkcs11js.CKA_LABEL, value: "My custom data" },
 ]);
 
-// Updating lable of Object
-pkcs11.C_SetAttributeValue(session, nObject, [{ type: pkcs11js.CKA_LABEL, value: nObjetcLabel + "!!!" }]);
+// Updating label of Object
+pkcs11.C_SetAttributeValue(session, nObject, [{ type: pkcs11js.CKA_LABEL, value: "My custom data!!!" }]);
 
 // Getting attribute value
 var label = pkcs11.C_GetAttributeValue(session, nObject, [
@@ -164,7 +167,7 @@ var label = pkcs11.C_GetAttributeValue(session, nObject, [
     { type: pkcs11js.CKA_TOKEN }
 ]);
 console.log(label[0].value.toString()); // My custom data!!!
-console.log(!!label[1].value[0]; // false
+console.log(!!label[1].value[0]); // false
 
 // Copying Object
 var cObject = pkcs11.C_CopyObject(session, nObject, [
@@ -172,7 +175,7 @@ var cObject = pkcs11.C_CopyObject(session, nObject, [
     { type: pkcs11js.CKA_TOKEN},
     { type: pkcs11js.CKA_PRIVATE},
     { type: pkcs11js.CKA_LABEL},
-])
+]);
 
 // Removing Object
 pkcs11.C_DestroyObject(session, cObject);
@@ -182,7 +185,7 @@ pkcs11.C_DestroyObject(session, cObject);
 
 Searching objects
 
-**NOTE:** If template is not setted for C_FindObjectsInit, then C_FindObjects returns all objects from slot  
+**NOTE:** If template is not set for C_FindObjectsInit, then C_FindObjects returns all objects from slot  
 
 ```javascript
 pkcs11.C_FindObjectsInit(session, [{ type: pkcs11js.CKA_CLASS, value: pkcs11js.CKO_DATA }]);
@@ -226,8 +229,8 @@ Digest
 ```javascript
 pkcs11.C_DigestInit(_session, { mechanism: pkcs11js.CKM_SHA256 });
 
-pkcs11.C_DigestUpdate(session, new Buffer("Incomming message 1"));
-pkcs11.C_DigestUpdate(session, new Buffer("Incomming message N"));
+pkcs11.C_DigestUpdate(session, new Buffer("Incoming message 1"));
+pkcs11.C_DigestUpdate(session, new Buffer("Incoming message N"));
 
 var digest = pkcs11.C_DigestFinal(_session, Buffer(256 / 8));
 
@@ -241,8 +244,8 @@ Signing data
 ```javascript
 pkcs11.C_SignInit(session, { mechanism: pkcs11js.CKM_SHA256_RSA_PKCS }, keys.privateKey);
 
-pkcs11.C_SignUpdate(session, new Buffer("Incomming message 1"));
-pkcs11.C_SignUpdate(session, new Buffer("Incomming message N"));
+pkcs11.C_SignUpdate(session, new Buffer("Incoming message 1"));
+pkcs11.C_SignUpdate(session, new Buffer("Incoming message N"));
 
 var signature = pkcs11.C_SignFinal(session, Buffer(256));
 ```
@@ -252,8 +255,8 @@ Verifying data
 ```javascript
 pkcs11.C_VerifyInit(session, { mechanism: pkcs11js.CKM_SHA256_RSA_PKCS }, keys.publicKey);
 
-pkcs11.C_VerifyUpdate(session, new Buffer("Incomming message 1"));
-pkcs11.C_VerifyUpdate(session, new Buffer("Incomming message N"));
+pkcs11.C_VerifyUpdate(session, new Buffer("Incoming message 1"));
+pkcs11.C_VerifyUpdate(session, new Buffer("Incoming message N"));
 
 var verify = pkcs11.C_VerifyFinal(session, signature);
 ```
@@ -275,8 +278,8 @@ pkcs11.C_EncryptInit(
 );
 
 var enc = new Buffer(0);
-enc = Buffer.concat([enc, pkcs11.C_EncryptUpdate(session, new Buffer("Incomming data 1"), new Buffer(16))]);
-enc = Buffer.concat([enc, pkcs11.C_EncryptUpdate(session, new Buffer("Incomming data N"), new Buffer(16))]);
+enc = Buffer.concat([enc, pkcs11.C_EncryptUpdate(session, new Buffer("Incoming data 1"), new Buffer(16))]);
+enc = Buffer.concat([enc, pkcs11.C_EncryptUpdate(session, new Buffer("Incoming data N"), new Buffer(16))]);
 enc = Buffer.concat([enc, pkcs11.C_EncryptFinal(session, new Buffer(16))]);
 
 console.log(enc.toString("hex"));
@@ -306,7 +309,7 @@ console.log(dec.toString());
 Deriving key with ECDH mechanism
 
 ```javascript
-// Recieve public data from EC public key
+// Receive public data from EC public key
 var attrs = pkcs11.C_GetAttributeValue(session, publicKeyEC, [{ type: pkcs11js.CKA_EC_POINT }])
 var ec = attrs[0].value;
 
@@ -380,7 +383,89 @@ mod.C_Finalize();
 
 [More](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/Reference/FC_Initialize) info about NSS params for `C_Initialize`
 
-### BIP32 Master and Child Key Pair Derivation
+### Example #11
+
+Detect if smartcard is removed with C_WaitForSlotEvent function
+
+```javascript
+var pkcs11js = require("pkcs11js");
+var pkcs11 = new pkcs11js.PKCS11();
+// Need a compliant Cryptoki Version 2.01 or later
+pkcs11.load("/usr/local/lib/softhsm/libsofthsm2.so");
+
+pkcs11.C_Initialize();
+
+var session;
+var intervalId;
+
+try {
+    // Getting info about PKCS11 Module
+    var module_info = pkcs11.C_GetInfo();
+
+    // Getting list of slots
+    var slots = pkcs11.C_GetSlotList(true);
+    var slot = slots[0];
+    console.log(slot);
+
+    // Getting info about slot
+    var slot_info = pkcs11.C_GetSlotInfo(slot);
+    // Getting info about token
+    var token_info = pkcs11.C_GetTokenInfo(slot);
+    console.log(slot_info);
+
+    // Getting info about Mechanism
+    var mechs = pkcs11.C_GetMechanismList(slot);
+    var mech_info = pkcs11.C_GetMechanismInfo(slot, mechs[0]);
+
+    session = pkcs11.C_OpenSession(slot, pkcs11js.CKF_RW_SESSION | pkcs11js.CKF_SERIAL_SESSION);
+
+    // Getting info about Session
+    var info = pkcs11.C_GetSessionInfo(session);
+    // pkcs11.C_Login(session, 1234, "password");
+
+    intervalId = setInterval(() => {
+        const rv = pkcs11.C_WaitForSlotEvent(pkcs11js.CKF_DONT_BLOCK, slot);
+        console.log('C_WaitForSlotEvent value : ' + rv.readUInt8(0));
+
+        if (rv.readUInt8(0) !== pkcs11js.CKR_NO_EVENT) {
+            /**
+             * Your code here to handle token removal for example
+             */
+        }
+    }, 1000);
+
+    /**
+     * Your app code here
+     */
+    
+    // pkcs11.C_Logout(session);
+}
+catch(e){
+    console.error(e);
+    process.exit(1);
+}
+finally {
+}
+
+function myCleanup() {
+    console.log('App specific cleanup code...');
+    clearInterval(intervalId);
+    try {
+        if (session) {
+            pkcs11.C_CloseSession(session);
+            pkcs11.C_Finalize();
+        }
+    }
+    catch(e){
+    }
+    console.log('Bye !');
+};
+
+process.on('SIGINT', myCleanup);
+```
+
+
+## BIP32 Master and Child Key Pair Derivation
 
 Please see [bip32.js](examples/bip32.js) for an example of performing BIP32 master and child key pair derivations.
 

@@ -52,7 +52,7 @@ public:
 	CK_ULONG C_GetObjectSize(CK_SESSION_HANDLE session, CK_OBJECT_HANDLE object);
 	void C_FindObjectsInit(CK_SESSION_HANDLE session, Scoped<Attributes> attrs);
 	void C_FindObjectsInit(CK_SESSION_HANDLE session);
-	CK_OBJECT_HANDLE C_FindObjects(CK_SESSION_HANDLE session);
+	vector<CK_OBJECT_HANDLE> C_FindObjects(CK_SESSION_HANDLE session, CK_ULONG ulMaxObjectCount);
 	void C_FindObjectsFinal(CK_SESSION_HANDLE session);
 	Scoped<Attributes> C_GetAttributeValue(CK_SESSION_HANDLE session, CK_OBJECT_HANDLE object, Scoped<Attributes> tmpl);
 	void C_SetAttributeValue(CK_SESSION_HANDLE session, CK_OBJECT_HANDLE object, Scoped<Attributes> tmpl);
@@ -119,6 +119,7 @@ public:
 	void C_GenerateRandom(CK_SESSION_HANDLE hSession, char *data, size_t dataLen);
 
 
+
 	void DeriveBIP32Master(
 		CK_SESSION_HANDLE hSession,
 		CK_OBJECT_HANDLE hBaseKey,
@@ -131,11 +132,15 @@ public:
 		Scoped<Attributes> publicTmpl,
 		Scoped<Attributes> privateTmpl, CK_OBJECT_HANDLE_PTR pPublicKey, CK_OBJECT_HANDLE_PTR pPrivateKey, std::vector<CK_ULONG> &path);
 
+	/* Event slot function */
+	CK_RV C_WaitForSlotEvent(CK_FLAGS flags, CK_SLOT_ID_PTR slotID);
 
 protected:
 
 	void* dlHandle;
 	CK_FUNCTION_LIST_PTR functionList;
+
+	void assertLoaded();
 };
 
 #endif // INCLUDE_H_PKCS11
